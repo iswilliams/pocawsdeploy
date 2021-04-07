@@ -1,0 +1,84 @@
+--Levantar docker BD
+docker-compose up
+En caso de que el puerto este usado : netstat -aon, taskkill /pid 7740 /F
+
+--Levantar docker lambda
+docker-compose up
+
+--Iniciar proyecto npm
+npm init
+
+--Instalar librerias
+npm install mysql --save
+npm i aws-sdk --save
+
+--Crear archivo lambda
+
+--Crear arhivo json
+
+--Comprimir archivos lambda
+
+--Crear función lambda
+awslocal lambda create-function --function-name anularTransporte --zip-file fileb://lambda.zip --handler index.handler --runtime nodejs12.x --role whatever
+
+--Eliminar funcion lambda
+awslocal lambda delete-function --function-name "anularTransporte"
+
+--Actualizar función
+awslocal lambda update-function-code --function-name anularTransporte --zip-file fileb://lambda.zip
+
+--Listar funciones
+awslocal lambda list-functions
+
+--Invocar la función para validar funcionamiento
+awslocal lambda invoke --function-name anularTransporte --payload file://transporte.json result.log
+
+--Invocar función con log
+awslocal lambda invoke --function-name ProcessSQS2SQS out --log-type Tail --payload file://transportes_corto.json --query 'LogResult' --output text | base64 -d
+awslocal lambda invoke --function-name anularTransporte out --log-type Tail --payload file://transportes.json --query 'LogResult' --output text | base64 -d
+
+--Crear colas de transportes
+awslocal sqs create-queue --queue-name falla.fifo --attributes FifoQueue=true
+
+--Crear colas de transpaleta
+awslocal sqs create-queue --queue-name anulacion_transporte.fifo --attributes FifoQueue=true
+
+--Eliminar colas
+awslocal sqs delete-queue --queue-url http://localhost:4566/000000000000/input_sap.fifo
+
+--Listar colas
+awslocal sqs list-queues
+
+awslocal sqs receive-message --queue-url http://localhost:4566/000000000000/anulacion_transporte.fifo
+
+--ver estado de las cola transportes
+awslocal sqs get-queue-attributes --queue-url http://localhost:4566/000000000000/anulacion_transporte.fifo --attribute-names All
+awslocal sqs get-queue-attributes --queue-url http://localhost:4566/000000000000/anulacion.fifo --attribute-names All
+
+--ver estado de las cola transpaleta
+awslocal sqs get-queue-attributes --queue-url http://localhost:4566/000000000000/transpaleta.fifo --attribute-names All
+
+--Asociar la función lambda a la cola de transportes
+awslocal lambda create-event-source-mapping --function-name anularTransporte  --batch-size 10 --event-source-arn arn:aws:sqs:us-east-1:000000000000:anulacion_transporte.fifo
+
+--Revisar la asociación
+awslocal lambda list-event-source-mappings
+
+--Eliminar asociación
+ awslocal lambda delete-event-source-mapping --uuid 81e0f0dc-1e29-45ef-af00-1f559d33c105
+
+-- Enviar un mensaje a la cola transportes
+awslocal sqs send-message --queue-url http://localhost:4566/000000000000/fifo --message-body file://input.json --message-group-id 1
+
+-- Revisar el estado de cola transportes
+awslocal sqs get-queue-attributes --queue-url http://localhost:4566/000000000000/anulacion.fifo --attribute-names All
+
+https://docs.aws.amazon.com/cli/latest/userguide/cliv2-migration.html#cliv2-migration-encodingenvvar
+
+https://zellwk.com/blog/async-await-in-loops/
+
+tests
+npm run tests
+npm install --save--de
+
+npm test --watch

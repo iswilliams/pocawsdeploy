@@ -1,0 +1,24 @@
+{
+  "name": "post-transporte",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest --coverage",
+    "statuscolas": "awslocal sqs get-queue-attributes --queue-url http://localhost:4566/000000000000/input_sap.fifo --attribute-names All && awslocal sqs get-queue-attributes --queue-url http://localhost:4566/000000000000/anulacion_transporte.fifo --attribute-names All",
+    "demo": "awslocal sqs send-message --queue-url http://localhost:4566/000000000000/anulacion_transporte.fifo --message-body file://input.json --message-group-id 1 ",
+    "update": "node zip.js && awslocal lambda update-function-code --function-name anularTransporte --zip-file fileb://lambda.zip ",
+    "deployinit": "node zip.js && awslocal lambda create-function --function-name anularTransporte --zip-file fileb://lambda.zip --handler index.handler --runtime nodejs12.x --role whatever && awslocal sqs create-queue --queue-name anulacion_transporte.fifo --attributes FifoQueue=true && awslocal sqs create-queue --queue-name input_sap.fifo --attributes FifoQueue=true && awslocal lambda create-event-source-mapping --function-name anularTransporte --maximum-retry-attempts 1 --batch-size 10 --event-source-arn arn:aws:sqs:us-east-1:000000000000:anulacion_transporte.fifo"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "archiver": "^5.3.0",
+    "aws-sdk": "^2.874.0",
+    "fs": "0.0.1-security",
+    "mysql": "^2.18.1"
+  },
+  "devDependencies": {
+    "jest": "^26.6.3"
+  }
+}
