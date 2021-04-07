@@ -1,14 +1,14 @@
 const AWS = require('aws-sdk');
 const mysql = require('mysql');
 
-const LOCAL_IP = '192.168.1.94';
+const LOCAL_IP = process.env.LOCALIP || '192.168.1.94';
 
 //Configuración de AWS
 const config = {
   endpoint: new AWS.Endpoint(`http://${LOCAL_IP}:4566/`),
-  accessKeyId: 'na',
-  secretAccessKey: 'na',
-  region: 'REGION'
+  accessKeyId: process.env.ACCESSKEYID || 'na',
+  secretAccessKey: process.env.SECRETACCESSKEYID || 'na',
+  region: process.env.REGION || 'REGION'
 };
 
 AWS.config.logger = console;
@@ -18,9 +18,9 @@ var sqs = new AWS.SQS;
 // Configuración de base de datos
 const connection = mysql.createConnection({
   host: LOCAL_IP,
-  user: 'root',
-  password: 'password',
-  database: 'db'
+  user: process.env.MYSQLUSER || 'root',
+  password: process.env.MYSQLPASSWORD || 'password',
+  database: process.env.DATABASE || 'db'
 });
 
 const executeAsyncQuery = (sql, params) => {
