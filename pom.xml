@@ -18,7 +18,9 @@
   <sonar.host.url>https://sonarcloud.io</sonar.host.url>
   <sonar.exclusions>
    test/**,
-   coverage/**
+   coverage/**,
+   sonar*/**,
+   apache*/**
   </sonar.exclusions>
 </properties>
 
