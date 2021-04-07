@@ -13,6 +13,7 @@
   <sonar.projectKey>DemoProjectISW</sonar.projectKey>
   <sonar.organization>iswilliams</sonar.organization>
   <sonar.sources>.</sonar.sources>
+  <sonar.inclusions>**/*.js,*.js</sonar.inclusions>
   <sonar.host.url>https://sonarcloud.io</sonar.host.url>
 </properties>
 
