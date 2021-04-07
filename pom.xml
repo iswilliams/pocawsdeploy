@@ -19,7 +19,7 @@
   <sonar.exclusions>
    test/**,
    coverage/**
-  <sonar.exclusions>
+  </sonar.exclusions>
 </properties>
 
 </project>
