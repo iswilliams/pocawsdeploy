@@ -20,7 +20,8 @@
    test/**,
    coverage/**,
    sonar*/**,
-   apache*/**
+   apache*/**,
+   zip.js
   </sonar.exclusions>
 </properties>
 
