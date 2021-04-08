@@ -69,9 +69,7 @@ Resources:
   TransporteLF:
     Type: 'AWS::Lambda::Function'
     Properties:
-      Code:
-        S3Bucket: !Ref LambdaBucketsName
-        S3Key: CodeBuild_Transporte
+      Code: BuildArtifact::yduMgYw
       Handler: index.handler
       Role: !GetAtt LambdaExecutionRole.Arn
       Runtime: nodejs12.x
