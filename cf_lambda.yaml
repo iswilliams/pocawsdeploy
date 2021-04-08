@@ -3,6 +3,10 @@ Parameters:
   LambdaBucketsName:
     Type: String
     Default: transportelf
+  buildBucketName:
+    Type: String
+  buildObjectKey:
+    Type: String
 Resources:
   LambdaExecutionRole:
     Type: 'AWS::IAM::Role'
@@ -69,7 +73,9 @@ Resources:
   TransporteLF:
     Type: 'AWS::Lambda::Function'
     Properties:
-      Code: BuildArtifact::yduMgYw
+      Code: 
+        S3Bucket: !Ref buildBucketName
+        S3Key: !Ref buildObjectKey
       Handler: index.handler
       Role: !GetAtt LambdaExecutionRole.Arn
       Runtime: nodejs12.x
